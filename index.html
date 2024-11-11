@@ -6,7 +6,165 @@
     <title>Recuerdos con mi Novia</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* ... (mantén los estilos sin cambios) ... */
+        :root {
+            --primary-color: #8A2BE2; /* Lila */
+            --secondary-color: #87CEFA; /* Azul celeste */
+            --background-color: #F0E6FF; /* Lila claro para el fondo */
+            --text-color: #333;
+            --card-background: #ffffff;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        #loginStatus {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        #loginStatus button {
+            margin: 0 0.5rem;
+        }
+        form {
+            background-color: var(--card-background);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-family: inherit;
+            font-weight: 600;
+        }
+        button:hover {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+        #recuerdos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .recuerdo {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .recuerdo:hover {
+            transform: translateY(-5px);
+        }
+        .recuerdo h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        .fecha {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 0.5rem;
+        }
+        .recuerdo img {
+            width: 100%;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+        .acciones {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+        .acciones button {
+            font-size: 0.8em;
+            padding: 0.5rem 1rem;
+            margin-left: 0.5rem;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-contenido {
+            background-color: var(--card-background);
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        .file-input-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+        .file-input-wrapper .btn-file-input {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-family: inherit;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .file-input-wrapper .btn-file-input:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+            form, .modal-contenido {
+                padding: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -28,7 +186,46 @@
         </div>
     </div>
 
-    <!-- ... (mantén los modales sin cambios) ... -->
+    <div id="modalLogin" class="modal">
+        <div class="modal-contenido">
+            <h2>Iniciar Sesión</h2>
+            <form id="formularioLogin">
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Contraseña" required>
+                <button type="submit">Iniciar Sesión</button>
+            </form>
+            <p>¿No tienes una cuenta? <a href="#" id="mostrarRegistro">Regístrate</a></p>
+        </div>
+    </div>
+
+    <div id="modalRegistro" class="modal">
+        <div class="modal-contenido">
+            <h2>Registrarse</h2>
+            <form id="formularioRegistro">
+                <input type="email" id="registroEmail" placeholder="Email" required>
+                <input type="password" id="registroPassword" placeholder="Contraseña" required>
+                <button type="submit">Registrarse</button>
+            </form>
+            <p>¿Ya tienes una cuenta? <a href="#" id="mostrarLogin">Inicia Sesión</a></p>
+        </div>
+    </div>
+
+    <div id="modalEditar" class="modal">
+        <div class="modal-contenido">
+            <h2>Editar Recuerdo</h2>
+            <form id="formularioEditar">
+                <input type="date" id="editarFecha" required>
+                <input type="text" id="editarTitulo" placeholder="Título" required>
+                <textarea id="editarDescripcion" placeholder="Descripción" required></textarea>
+                <div class="file-input-wrapper">
+                    <button class="btn-file-input" type="button">Cambiar Imagen</button>
+                    <input type="file" id="editarImagen" accept="image/*">
+                </div>
+                <button type="submit">Guardar Cambios</button>
+                <button type="button" id="cancelarEdicion">Cancelar</button>
+            </form>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
